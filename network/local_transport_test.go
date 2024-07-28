@@ -7,10 +7,8 @@ import (
 )
 
 func TestConnect(t *testing.T) {
-	// assert.Equal(t, 1, 1)
-
-	tra := NewLocalTransport("A")
-	trb := NewLocalTransport("B")
+	tra := NewLocalTransport("A").(*LocalTransport)
+	trb := NewLocalTransport("B").(*LocalTransport)
 
 	tra.Connect(trb)
 	trb.Connect(tra)
@@ -20,8 +18,8 @@ func TestConnect(t *testing.T) {
 }
 
 func TestSendMessage(t *testing.T) {
-	tra := NewLocalTransport("A")
-	trb := NewLocalTransport("B")
+	tra := NewLocalTransport("A").(*LocalTransport)
+	trb := NewLocalTransport("B").(*LocalTransport)
 
 	tra.Connect(trb)
 	trb.Connect(tra)
