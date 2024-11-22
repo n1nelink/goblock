@@ -1,11 +1,10 @@
 package core
 
-import "io"
+import "goblock/crypto"
 
 type Transaction struct {
 	Data []byte
+
+	PublicKey crypto.PublicKey
+	Signature *crypto.Signature
 }
-
-func (t *Transaction) DecodeBinary(r io.Reader) error { return nil }
-
-func (t *Transaction) EncodeBinary(w io.Writer) error { return nil }
