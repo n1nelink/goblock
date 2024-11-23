@@ -1,6 +1,9 @@
 package core
 
 import (
+	"bytes"
+	"encoding/gob"
+	"fmt"
 	"goblock/crypto"
 	"goblock/types"
 	"io"
@@ -25,11 +28,34 @@ type Block struct {
 }
 
 func NewBlock(h *Header, txs []Transaction) *Block {
-
 	return &Block{
 		Header:       h,
 		Transactions: txs,
 	}
+}
+
+func (b *Block) Sign(privKey crypto.PrivateKey) error {
+	sig, err := privKey.Sign(b.HeaderData())
+	if err != nil {
+		return err
+	}
+
+	b.Validator = privKey.PublicKey()
+	b.Signature = sig
+
+	return nil
+}
+
+func (b *Block) Verify() error {
+	if b.Signature == nil {
+		return fmt.Errorf("block has no signature")
+	}
+
+	if !b.Signature.Verify(b.Validator, b.HeaderData()) {
+		return fmt.Errorf("invalid block signature")
+	}
+
+	return nil
 }
 
 func (b *Block) Decode(r io.Reader, dec Decoder[*Block]) error {
@@ -46,4 +72,14 @@ func (b *Block) Hash(hasher Hasher[*Block]) types.Hash {
 	}
 
 	return b.hash
+}
+
+func (b *Block) HeaderData() []byte {
+	buf := &bytes.Buffer{}
+	enc := gob.NewEncoder(buf)
+	if err := enc.Encode(b.Header); err != nil {
+		panic(err)
+	}
+
+	return buf.Bytes()
 }

@@ -25,4 +25,10 @@ func TestVerifyTransaction(t *testing.T) {
 
 	assert.Nil(t, tx.Sign(privKey))
 	assert.Nil(t, tx.Verify())
+
+	// verify transaction with invalid signature
+	otherPrivKey := crypto.GeneratePrivateKey()
+	tx.PublicKey = otherPrivKey.PublicKey()
+
+	assert.NotNil(t, tx.Verify())
 }
