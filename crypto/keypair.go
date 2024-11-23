@@ -23,7 +23,6 @@ func GeneratePrivateKey() PrivateKey {
 }
 
 func (priv PrivateKey) PublicKey() PublicKey {
-
 	return PublicKey{
 		key: &priv.key.PublicKey,
 	}
