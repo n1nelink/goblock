@@ -13,5 +13,6 @@ func NewBlockValidator(bc *Blockchain) *BlockValidator {
 }
 
 func (bv *BlockValidator) ValidateBlock(b *Block) error {
+
 	return nil
 }
