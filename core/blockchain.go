@@ -9,9 +9,9 @@ type Blockchain struct {
 func NewBlockchain(genesis *Block) (*Blockchain, error) {
 	blockchain := &Blockchain{
 		headers: []*Header{},
+		store:   NewMemoryStore(),
 	}
 	blockchain.validator = NewBlockValidator(blockchain)
-
 	err := blockchain.addBlockWithoutValidation(genesis)
 
 	return blockchain, err
@@ -22,11 +22,15 @@ func (bc *Blockchain) SetValidator(v Validator) {
 }
 
 func (bc *Blockchain) AddBlock(b *Block) error {
-	return nil
+	if err := bc.validator.ValidateBlock(b); err != nil {
+		return err
+	}
+
+	return bc.addBlockWithoutValidation(b)
 }
 
 func (bc *Blockchain) HasBlock(height uint32) bool {
-	return height < bc.Height()
+	return height <= bc.Height()
 }
 
 func (bc *Blockchain) Height() uint32 {
