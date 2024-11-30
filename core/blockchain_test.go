@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -26,16 +25,13 @@ func TestAddBlock(t *testing.T) {
 
 	assert.Equal(t, bc.Height(), uint32(lenBlocks))
 	assert.Equal(t, len(bc.headers), lenBlocks+1)
-
-	assert.Nil(t, bc.AddBlock(randomBlock(91)))
+	assert.NotNil(t, bc.AddBlock(randomBlock(89)))
 }
 
 func TestNewBlockchain(t *testing.T) {
 	bc := newBlockchainWithGenesis(t)
 	assert.NotNil(t, bc.validator)
 	assert.Equal(t, bc.Height(), uint32(0))
-
-	fmt.Println(bc.Height())
 }
 
 func TestHasBlock(t *testing.T) {

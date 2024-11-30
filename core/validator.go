@@ -1,5 +1,7 @@
 package core
 
+import "fmt"
+
 type Validator interface {
 	ValidateBlock(b *Block) error
 }
@@ -13,6 +15,13 @@ func NewBlockValidator(bc *Blockchain) *BlockValidator {
 }
 
 func (bv *BlockValidator) ValidateBlock(b *Block) error {
+	if bv.bc.HasBlock(b.Height) {
+		return fmt.Errorf("chain already contains block (%d) with hash (%s)", b.Height, b.Hash(BlockHasher{}))
+	}
+
+	if err := b.Verify(); err != nil {
+		return err
+	}
 
 	return nil
 }
